@@ -110,7 +110,6 @@ class YOLOTrackingApp:
 
         self.video_handler.release()
 
-# Error handling
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         print("Usage: python yolov8_oop_tracker.py <video_path>")
