@@ -29,7 +29,6 @@ class YOLOTracker:
         return self.model.track(frame)
 
     def update_history(self, boxes, track_ids):
-        """Updates tracking history and ensures valid IDs."""
         if not track_ids or not boxes.any():  # Prevent issues with empty lists
             return
 
@@ -59,7 +58,7 @@ class VideoHandler:
 
     def _init_writer(self, input_path: str):
         output_path = input_path.rsplit('.', 1)[0] + '_tracked.mp4'
-        fourcc = cv2.VideoWriter.fourcc(*'mp4v')
+        fourcc = cv2.VideoWriter.fourcc(*'mp4v') # codec
         fps = self.cap.get(cv2.CAP_PROP_FPS)
         frame_size = (int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
         return cv2.VideoWriter(output_path, fourcc, fps, frame_size)
@@ -106,7 +105,7 @@ class YOLOTrackingApp:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="YOLO Object Tracking")
     parser.add_argument("video_path", help="Path to input video")
-    parser.add_argument("--model", default="yolo11m.pt", choices=["yolov8m.pt","yolov9m.pt","yolov10m.pt","yolo11m.pt","yolo12m.pt"], help="YOLO model to use")
+    parser.add_argument("--model", default="yolov8m.pt", choices=["yolov8m.pt","yolov9m.pt","yolov10m.pt","yolo11m.pt","yolo12m.pt"], help="YOLO model to use")
 
     args = parser.parse_args()
 
