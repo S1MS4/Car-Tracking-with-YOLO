@@ -1,5 +1,3 @@
-Sure! Here's the updated README with emojis and supported color modes:
-
 ---
 
 # YOLO Object Tracking Script 🎯📹
