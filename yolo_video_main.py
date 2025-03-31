@@ -18,7 +18,6 @@ class YOLOModelFactory:
     def create(model_path: str):
         return YOLOModel(model_path)
 
-
 # ---------------- Tracker Class ----------------
 class YOLOTracker:
     def __init__(self, model: YOLOModel):
@@ -90,8 +89,8 @@ class YOLOTrackingApp:
 
             results = self.tracker.process_frame(frame)
             if results[0].boxes and results[0].boxes.id is not None:
-                boxes = results[0].boxes.xywh.cpu().numpy()
-                track_ids = results[0].boxes.id.int().tolist()
+                boxes = results[0].boxes.xywh.cpu().numpy() # cpu method transforms received gpu tensors
+                track_ids = results[0].boxes.id.int().tolist() # compatible cpu format
                 self.tracker.update_history(boxes, track_ids)
 
                 annotated_frame = results[0].plot()
