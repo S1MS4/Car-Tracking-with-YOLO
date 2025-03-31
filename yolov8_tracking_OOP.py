@@ -21,6 +21,7 @@ class TrackerBase:
     def process_frame(self, frame):
         raise NotImplementedError("Implement method")
 
+
 class YOLOTracker(TrackerBase):  # - Inheritance, aggregation :)
     def __init__(self, model):
         self.model = model
@@ -53,7 +54,7 @@ class YOLOTracker(TrackerBase):  # - Inheritance, aggregation :)
     def draw_tracks(self, frame):
         for track_id, track in self.track_history.items():
             points = np.hstack(track).astype(np.int32).reshape((-1, 1, 2))
-            cv2.polylines(frame, [points], isClosed=False, color=(0, 45, 255), thickness=3, lineType=cv2.LINE_AA)
+            cv2.polylines(frame, [points], isClosed=False, color=(0, 45, 255), thickness=1, lineType=cv2.LINE_AA)
 
 
 class VideoHandler:
@@ -109,6 +110,7 @@ class YOLOTrackingApp:
                 self.video_handler.write_frame(annotated_frame)
 
         self.video_handler.release()
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
