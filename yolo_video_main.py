@@ -46,9 +46,9 @@ class YOLOTracker:
         self.history = {k: v[-5:] for k, v in self.history.items() if k in track_ids}
 
     def draw_tracks(self, frame):
-        for points in self.history.values():
-            for i in range(1, len(points)):
-                cv2.line(frame, tuple(map(int, points[i-1])), tuple(map(int, points[i])), (0, 255, 0), 2)
+        for track_id, track in self.history.items():
+            points = np.hstack(track).astype(np.int32).reshape((-1, 1, 2))
+            cv2.polylines(frame, [points], isClosed=False, color=(0, 45, 255), thickness=1, lineType=cv2.LINE_AA)
 
 
 # ---------------- Video Handling ----------------
@@ -106,7 +106,7 @@ class YOLOTrackingApp:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="YOLO Object Tracking")
     parser.add_argument("video_path", help="Path to input video")
-    parser.add_argument("--model", default="yolo11m.pt", choices=["yolo11m.pt", "yolov8n.pt"], help="YOLO model to use")
+    parser.add_argument("--model", default="yolo11m.pt", choices=["yolov8m.pt","yolov9m.pt","yolov10m.pt","yolo11m.pt","yolo12m.pt"], help="YOLO model to use")
 
     args = parser.parse_args()
 
