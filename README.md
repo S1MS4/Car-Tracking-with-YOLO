@@ -1,122 +1,157 @@
----
+# 🚗 Car Tracking with YOLO >>UNFINISHED<<🎯
 
-# YOLO Object Tracking Script 🎯📹
+Welcome to the **Car Tracking with YOLO** project This nifty tool lets you detect and track vehicles in videos using the powerful YOLO (You Only Look Once) deep learning mode. Whether you're analyzing traffic patterns or just curious about vehicle movements, this project has got you covere!
 
-## Overview 🌟
-This script provides an object tracking solution based on the YOLO (You Only Look Once) deep learning model. The system takes a video as input, applies YOLO object detection, tracks detected objects across frames, and outputs the video with the tracked objects annotated. The script leverages the `ultralytics` YOLO implementation for detection and utilizes OpenCV for video processing and visualization.
+## 🌟 Features
 
----
+- **Real-time Vehicle Detection*: Spot cars in your videos as they moe.
+- **Easy Integration*: Seamlessly plug into your existing video processing pipelins.
+- **Modular Design*: Customize components to fit your unique nees.
 
-## Functionality ⚙️
+## 🚀 Getting Started
 
-### 1. **YOLOModel Class** 🧑‍💻
-   - **Purpose**: Encapsulates the YOLO model for object detection and tracking.
-   - **Constructor (`__init__`)**: Initializes the YOLO model from a specified file path (`model_path`).
-   - **Method (`track`)**: Performs object tracking on a given video frame and returns the results (including bounding boxes and object IDs).
+Follow these simple steps to set up and run the project:
 
-### 2. **YOLOModelFactory Class** 🏭
-   - **Purpose**: Provides a factory method to create and return an instance of the `YOLOModel`.
-   - **Static Method (`create`)**: Creates and returns a `YOLOModel` instance by loading a YOLO model from the specified path.
+1. **Clone the Repository**:
 
-### 3. **YOLOTracker Class** 🏃‍♂️
-   - **Purpose**: Manages the tracking history of objects detected across frames.
-   - **Constructor (`__init__`)**: Initializes the tracker with the provided YOLO model.
-   - **Method (`process_frame`)**: Passes a frame to the YOLO model for object detection and tracking.
-   - **Method (`update_history`)**: Updates the tracking history with the current positions (bounding box) and IDs of the detected objects.
-   - **Method (`draw_tracks`)**: Draws the tracking path for each object across multiple frames, visually representing the movement of each object.
-
-### 4. **VideoHandler Class** 🎬
-   - **Purpose**: Handles video I/O, including reading frames from an input video and writing the processed frames (with object tracking annotations) to an output video.
-   - **Constructor (`__init__`)**: Initializes the video reader and output writer.
-   - **Method (`_init_writer`)**: Initializes the video writer with proper codec, frame rate, and frame size.
-   - **Method (`read_frame`)**: Reads the next frame from the video.
-   - **Method (`write_frame`)**: Writes a processed frame (with tracked objects) to the output video.
-   - **Method (`release`)**: Releases the video reader and writer, closing the video file.
-
-### 5. **YOLOTrackingApp Class** 🚀
-   - **Purpose**: Orchestrates the entire tracking process, from reading the video frames to tracking objects and writing the annotated video output.
-   - **Constructor (`__init__`)**: Initializes the video handler, creates the YOLO model through the factory, and initializes the YOLO tracker.
-   - **Method (`run`)**: Main loop to process the video frame by frame. For each frame:
-     1. The frame is passed to the tracker for object detection.
-     2. The tracking history is updated.
-     3. Tracking paths are drawn on the frame.
-     4. The processed frame is written to the output video.
-
-### 6. **Command-Line Interface (CLI)** 🖥️
-   - **Purpose**: Allows the user to run the script from the command line.
-   - **Arguments**:
-     - `video_path` (required): Path to the input video file to be processed.
-     - `--model` (optional): Specifies the YOLO model to use. Available options are:
-       - `yolov8m.pt`
-       - `yolov9m.pt`
-       - `yolov10m.pt`
-       - `yolo11m.pt`
-       - `yolo12m.pt`
-     - The default model is `yolov8m.pt`.
-   - **Usage**:
-     ```bash
-     python yolo_tracking.py path/to/video.mp4 --model yolov8m.pt
-     ```
-
----
-
-## Supported Color Modes 🎨
-The `YOLOTracker` class uses a custom color scheme to visualize the tracking paths. You can customize the drawing of tracking paths to use different colors and thicknesses for visual clarity. 
-
-Here are the supported colors:
-- **Tracked Object Path Color**: 
-  - Default: `RGB(0, 45, 255)` (Orange color).
-  - You can modify this color in the `draw_tracks` method of the `YOLOTracker` class to suit your needs.
-  
-Additionally, the video itself is saved in **MP4 format** with the **'mp4v' codec** to maintain high compatibility with most video players.
-
----
-
-## How It Works 🛠️
-
-1. **Input**: The user provides a video file and specifies the YOLO model to use.
-2. **Detection and Tracking**:
-   - The video frames are processed one by one.
-   - YOLO is used to detect objects, and the tracker keeps track of each object's ID and position across frames.
-   - The object’s historical positions are drawn onto the video as polylines representing the movement over time.
-3. **Output**: The annotated video, showing the tracked objects, is saved with the suffix `_tracked` appended to the original video filename.
-
----
-
-## Dependencies 📦
-- `opencv-python` (cv2): For video handling and frame manipulation.
-- `numpy`: For handling arrays and numerical operations.
-- `argparse`: For command-line argument parsing.
-- `ultralytics`: For the YOLO model and object detection.
-
----
-
-## Example Usage 🎥
-
-1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repository/yolo-tracking.git
+   git clone https://github.com/S1MS4/Car-Tracking-with-YOLO.git
    ```
+
 
-2. Install dependencies:
+2. **Navigate to the Project Directory**:
+
    ```bash
-   pip install opencv-python numpy ultralytics
+   cd Car-Tracking-with-YOLO
    ```
+
 
-3. Run the script with an example video and a specified YOLO model:
+3. **Install Dependencies**:
+
+   Ensure you have Python installed. Then, install the required packages:
+
    ```bash
-   python yolo_tracking.py input_video.mp4 --model yolov8m.pt
+   pip install -r requirements.txt
    ```
+
 
-4. The output video with tracked objects will be saved as `input_video_tracked.mp4`.
+4. **Run the Application**:
+
+   Execute the main script to start processing:
+
+   ```bash
+   python Scripts/run.py --input path_to_video.mp4
+   ```
+
+
+   Replace `path_to_video.mp4` with the path to your video file.
+
+## 🛠️ Under the Hood
+
+### Object-Oriented Principles in Action
+
+Our codebase is crafted with solid OOP principles:
+
+- **Encapsulatio**: The `VideoHandler` class wraps all video processing details, keeping things idy.
+
+  
+```python
+  class VideoHandler:
+      def __init__(self, input_path: str):
+          self.cap = cv2.VideoCapture(input_path)
+          self.out = self._init_writer(input_path)
+      # ...
+ ```
+
+
+- **Abstractio**: The `YOLOModel` class hides the complexities of the YOLO model, offering a clean interace.
+
+  
+```python
+  class YOLOModel:
+      def __init__(self, model_path: str):
+          self.model = YOLO(model_path)
+      # ...
+ ```
+
+
+- **Inheritanc**: While not heavily used now, the design is ready for future classes to inherit and extend functionaliies.
+
+- **Polymorphis**: The `YOLOModelFactory` class showcases polymorphism by standardizing the creation of YOLO model instaces.
+
+  
+```python
+  class YOLOModelFactory:
+      @staticmethod
+      def create(model_path: str):
+          return YOLOModel(model_path)
+ ```
+
+
+### Design Patterns
+
+We've incorporated the **Factory Method** pattern with our `YOLOModelFactoy`. This approach streamlines the creation of `YOLOModel` instances, making the code more flexible and scalble.
+
+### Composition and Aggregation
+
+- **Compositio**: The `YOLOTracker` class contains an instance of `YOLOModel`, enabling efficient frame procesing.
+
+  
+```python
+  class YOLOTracker:
+      def __init__(self, model):
+          self.model = model
+      # ...
+ ```
+
+
+- **Aggregatio**: The `VideoHandler` class manages OpenCV resources, handling video capture and writing seamlesly.
+
+### File Operatins
+
+Our `VideoHandler` class takes care of reading from and writing to video files, ensuring your processed videos are saved without a htch.
+
+### Testng
+
+Quality is key! We've used the `unittest` framework to test core functionalities. Check out `yolo_unit_test.py` for tests on model creation, frame processing, and ore
+
+
+```python
+import unittest
+import numpy as np
+from Scripts.app import YOLOModelFactory, YOLOTracker, VideoHandler
+
+class TestYOLOIntegration(unittest.TestCase):
+    def setUp(self):
+        self.model = YOLOModelFactory.create("yolo11m.pt")
+        self.tracker = YOLOTracker(self.model)
+    # ...
+```
+
+
+### Code Stle
+
+We adhere to PEP8 style guidelines, ensuring our code is clean and readble.
+
+## 🎯 Achievements & Challenges
+
+- **Successs**: Integrated the YOLO model for real-time vehicle tracking, achieving impressive detection seeds.
+
+- **Hurdls**: Encountered challenges with detection accuracy in low-light videos, prompting us to enhance preprocessing technques.
+
+## 🌈 Future Directions
+
+- **Enhanced Accurcy**: Implement advanced techniques to boost detection in varied lighting condtions.
+
+- **User-Friendly Interfce**: Develop a GUI to make the application more accessible to non-technicalusers.
+
+- **Expanded Object Trackng**: Extend capabilities to track multiple object types, broadening the application'sscope.
+
+## 🔗 References
+
+- [YOLO: Real-Time Object Detection](https://pjreddie.com/darknet/yolo/)
+- [OpenCV Documentation](https://docs.opencv.org/
 
 ---
 
-## Notes ⚠️
-- Ensure that the specified model file (`yolov8m.pt`, etc.) is available in the correct directory or provide the full path to the model.
-- The script saves the output video in the same directory as the input video with the suffix `_tracked`.
-
----
-
-## Conclusion 🏁
-This script offers a straightforward method to apply YOLO-based object tracking to video files, providing real-time tracking visualizations with minimal setup. It is flexible and can be adapted to work with different YOLO model versions, making it suitable for various detection and tracking tasks.
+*Dive in, explore, and happy trcking!* 
