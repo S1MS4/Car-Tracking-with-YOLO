@@ -10,7 +10,29 @@ This is a **YOLO-based object tracking system** that processes a video file, det
 
 ### ▶️ How to run the program
 
-Make sure you have the required dependencies installed.
+Make sure you have the required dependencies installed. They are listed below:
+---
+
+## 📦 Dependencies
+
+To run this application, you need the following Python libraries:
+
+| Library             | Purpose                                                                 |
+|---------------------|-------------------------------------------------------------------------|
+| `cv2` (OpenCV)      | For reading, writing, and drawing on video frames.                      |
+| `numpy`             | Used for numerical operations and array manipulation.                   |
+| `argparse`          | Parses command-line arguments for selecting input files and models.     |
+| `collections.defaultdict` | Efficiently tracks object history for drawing tracks.             |
+| `ultralytics`       | Provides the YOLO model for object detection and tracking.              |
+| `unittest`          | Built-in Python module for writing and running tests.                   |
+
+### 🔧 Installation
+
+You can install the required dependencies using pip like this:
+
+```bash
+pip install opencv-python numpy ultralytics
+```
 
 Run the program with:
 
