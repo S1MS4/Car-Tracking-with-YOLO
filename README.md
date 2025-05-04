@@ -68,24 +68,50 @@ def _init_writer(self, input_path: str):
 
 * Similarly, classes like `YOLOModel` and `YOLOTracker` expose only the methods needed by the main application, while hiding lower-level details like inference parameters or track history management.
 
-
 #### 2. **Abstraction**
 
-Users only need to call `YOLOTrackingApp.run()` to process a video; internal details like frame handling, model inference, and drawing are hidden.
+Abstraction is achieved by exposing only essential methods and hiding the internal complexities of how tasks are performed.
+
+* The `YOLOTrackingApp` class acts as a high-level orchestrator. From the user’s perspective, processing a video simply means calling `.run()`.
+
+* Internally, `run()` reads each frame, sends it for detection and tracking, draws the results, and writes them to an output video. These steps are abstracted into smaller components (`VideoHandler`, `YOLOModel`, `YOLOTracker`), and their inner workings are hidden:
 
 ```python
 class YOLOTrackingApp:
     def run(self):
-        ...
+        while self.video.cap.isOpened():
+            success, frame = self.video.read_frame()
+            if not success:
+                break
+
+            results = self.tracker.process_frame(frame)
+            ...
+            self.video.write_frame(annotated_frame)
+
+        self.video.release()
 ```
+
+* This design allows users to interact with the app at a high level without needing to understand the YOLO model internals or how OpenCV manages video streams.
 
 #### 3. **Inheritance**
 
-While no explicit inheritance hierarchy is shown, the use of YOLO from `ultralytics` implies inheritance behind the scenes. You could easily extend `YOLOModel` to create specialized variants.
+Although user-defined inheritance is not explicitly utilized in the provided code, the project benefits from inheritance through the use of the [Ultralytics YOLO](https://github.com/ultralytics/ultralytics) library.
+
+* The `YOLO` class from Ultralytics inherits from base PyTorch models internally. The project wraps this in a custom `YOLOModel` class, which can easily be extended:
+
+```python
+class YOLOModel:
+    def __init__(self, model_path: str):
+        self.model = YOLO(model_path)
+```
+
+* This structure makes the system extensible — for example, you could inherit from `YOLOModel` to implement logging, preprocessing, or advanced inference pipelines.
 
 #### 4. **Polymorphism**
 
-Used through the factory design pattern—allowing for flexible creation of different models using the same interface.
+Polymorphism is used via the **Factory Design Pattern** and potential extensibility:
+
+* The `YOLOModelFactory` provides a unified interface for model creation, enabling different model types or configurations to be loaded without changing how they're used:
 
 ```python
 class YOLOModelFactory:
@@ -94,45 +120,59 @@ class YOLOModelFactory:
         return YOLOModel(model_path)
 ```
 
-### 🎯 Design Pattern Used
+* Regardless of which YOLO model version is loaded (`yolov8m.pt`, `yolov8n.pt`, etc.), the calling code in `YOLOTrackingApp` does not change — it simply calls `model.track(frame)`.
 
-**Factory Pattern** is implemented in `YOLOModelFactory`, which abstracts away the instantiation of the YOLO model and allows flexible integration of future model types.
+---
 
-### 🔗 Composition and Aggregation
+### 🧩 Composition and Aggregation
 
-* **Composition**: `YOLOTrackingApp` *has-a* `VideoHandler`, `YOLOModel`, and `YOLOTracker`.
-* **Aggregation**: `YOLOTracker` aggregates history data using Python’s `defaultdict`.
+The project demonstrates both **composition** and **aggregation** principles:
+
+* **Composition** is used in `YOLOTrackingApp`, where the components `VideoHandler`, `YOLOModel`, and `YOLOTracker` are created and managed internally:
 
 ```python
 class YOLOTrackingApp:
-    def __init__(...):
-        self.video = VideoHandler(...)
-        ...
+    def __init__(self, video_path: str, model_path: str):
+        self.video = VideoHandler(video_path)
+        model = YOLOModelFactory.create(model_path)
+        self.tracker = YOLOTracker(model)
 ```
 
-### 📂 File I/O (Read & Write)
+* These components have no meaning outside of the application—they are fully owned and controlled by it.
 
-* **Reading frames** from video via `cv2.VideoCapture`
-* **Writing frames** with annotations via `cv2.VideoWriter`
+* **Aggregation** is used in `YOLOTracker` to maintain tracking history using a `defaultdict(list)`. This allows objects (track histories) to exist independently and be updated over time without tight coupling.
+
+---
+
+### 🧾 File I/O Operations
+
+The project performs both **reading from** and **writing to** files:
+
+* **Input** is handled using OpenCV’s `VideoCapture` to read frames from a video file.
+* **Output** is written frame-by-frame to a new video file with `_tracked.mp4` suffix, using `VideoWriter`.
 
 ```python
-def read_frame(self):
-    return self.cap.read()
-
-def write_frame(self, frame):
-    self.out.write(frame)
+self.cap = cv2.VideoCapture(input_path)
+...
+self.out.write(frame)
 ```
+
+This ensures real-time processing of input videos and persistent saving of results.
+
+---
 
 ### 🧪 Testing
 
-Unit testing is implemented via Python’s `unittest` module in `yolo_unit_test.py`.
+Testing is implemented with Python's built-in `unittest` framework:
 
-Sample tests include:
+* Tests in `yolo_unit_test.py` verify:
 
-* Model creation
-* Frame processing
-* Tracker update logic
-* Video file loading
+  * Model creation (`test_model_creation`)
+  * Frame processing logic (`test_process_frame`)
+  * Tracker history updates (`test_update_history`)
+  * Video file I/O (`test_video_handler`)
+
+Example test:
 
 ```python
 def test_update_history(self):
@@ -142,7 +182,7 @@ def test_update_history(self):
     self.assertIn(1, self.tracker.history)
 ```
 
----
+This ensures components work individually and can be confidently composed into a larger system.
 
 ## 📊 Results and Summary
 
@@ -170,7 +210,6 @@ def test_update_history(self):
 * Add GUI for video input/output selection.
 * Live webcam tracking.
 * Store tracking logs (CSV/JSON).
-* Multi-camera synchronization and fusion.
 * Add model benchmarking and FPS measurement utilities.
 
 ---
