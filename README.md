@@ -21,17 +21,18 @@ Make sure you have the required dependencies installed. They are listed below:
 
 ## 📦 Dependencies
 
-To run this application, you need the following Python libraries:
+The application requires the following Python libraries:
 
-| Component                 | Purpose                                                             |
-| ------------------------- | ------------------------------------------------------------------- |
-| `cv2` (OpenCV)            | For reading, writing, and drawing on video frames.                  |
-| `numpy`                   | Used for numerical operations and array manipulation.               |
-| `argparse`                | Parses command-line arguments for selecting input files and models. |
-| `collections.defaultdict` | Efficiently tracks object history for drawing tracks.               |
-| `ultralytics`             | Provides the YOLO model for object detection and tracking.          |
-| `unittest`                | Built-in Python module for writing and running tests.               |
-| `Scripts` folder          | **Required**: Contains the main application logic and entry point.  |
+| Component                  | Purpose                                                             |
+|----------------------------|---------------------------------------------------------------------|
+| `cv2` (OpenCV)             | Reading, writing, and drawing on video frames                      |
+| `numpy`                    | Numerical operations and array manipulation                        |
+| `argparse`                 | Parses command-line arguments                                      |
+| `collections.defaultdict`  | Efficiently tracks object history                                  |
+| `ultralytics`              | YOLO model for object detection and tracking                      |
+| `unittest`                 | Built-in module for writing and running tests                     |
+| **`video`**               | 🔑 **Required**: The video file to be processed (input required for tracking) |
+| **`Scripts`**             | 🔑 **Required**: Contains the main application logic and entry point |
 
 ⚠️ Note: The YOLO models (e.g., yolov8m.pt) are downloaded automatically by the ultralytics library if not already present locally. No manual download is required.
 ### 🔧 Installation
