@@ -35,18 +35,18 @@ You can install the required dependencies using pip like this:
 ```bash
 pip install opencv-python numpy ultralytics
 ```
+**(NOTICE) before you run this don't forget to cd into the appropriate directory!**
 
+**for me it's:**
+```bash
+cd yolov8_tracking/Car-Tracking-with-yolov8  
+```
 Run the program with:
 
 ```bash
 python -m Scripts.run <path_to_input_video> --model yolov8m.pt
 ```
 
-**(NOTICE) before you run this don't forget to cd into the appropriate directory:**
-```bash
-cd yolov8_tracking/Car-Tracking-with-yolov8  
-```
-if you're
 For example:
 
 ```bash
