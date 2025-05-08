@@ -62,7 +62,7 @@ python -m Scripts.run "path/to/input/video" --model yolov8m.pt
 ### 🛠 How to use the program
 
 1. Provide a path to a video file.
-2. The application will process the video and generate an output file with `_tracked` appended to the filename.
+2. The application will process the video and generate an output file with `_model_name` appended to the filename.
 3. You’ll find the output video in the same directory as your input.
 
 ---
