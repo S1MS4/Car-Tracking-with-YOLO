@@ -1,13 +1,19 @@
 ---
 
 # 🎯 YOLO Object Tracking Application
-![Application Thumbnail](assets/thumbnail.gif)
+
 ## 📌 Introduction
 
 ### 🔍 What is this application?
 
 This is a **YOLO-based object tracking system** that processes a video file, detects and tracks multiple objects using the [Ultralytics YOLO](https://github.com/ultralytics/ultralytics) model, and outputs an annotated video with tracked object paths. It draws persistent tracks for each object using a combination of YOLO’s object detection and custom tracking history.
+## 👁️‍🗨️ Preview
 
+The program processes each frame of your video, assigns consistent IDs to objects, and draws motion trails. These trails are shortened intentionally to keep the visualization clean and focused on active detections.
+
+![Demo GIF](show.gif)
+
+Above: Objects are detected, labeled, and tracked with persistent paths as they move through the scene. (Note there are prediction inaccuracies)
 ### ▶️ How to run the program
 
 Make sure you have the required dependencies installed. They are listed below:
