@@ -5,7 +5,7 @@ class YOLOModel:
         self.model = YOLO(model_path)
 
     def track(self, frame):
-        return self.model.track(frame, persist=True)
+        return self.model.track(frame, persist=True,verbose=False)
 
 class YOLOModelFactory:
     @staticmethod

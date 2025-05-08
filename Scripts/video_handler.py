@@ -1,12 +1,14 @@
 import cv2
+import os
 
 class VideoHandler:
-    def __init__(self, input_path: str):
+    def __init__(self, input_path: str, model_path: str):
         self.cap = cv2.VideoCapture(input_path)
-        self.out = self._init_writer(input_path)
+        self.out = self._init_writer(input_path, model_path)
 
-    def _init_writer(self, input_path: str):
-        output_path = input_path.rsplit('.', 1)[0] + '_tracked.mp4'
+    def _init_writer(self, input_path: str, model_path: str):
+        model_name = os.path.splitext(os.path.basename(model_path))[0]
+        output_path = input_path.rsplit('.', 1)[0] + f'_{model_name}.mp4'
         fourcc = cv2.VideoWriter.fourcc(*'mp4v')
         fps = self.cap.get(cv2.CAP_PROP_FPS)
         frame_size = (
