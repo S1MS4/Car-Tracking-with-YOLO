@@ -1,7 +1,7 @@
 ---
 
 # 🎯 YOLO Object Tracking Application
-
+![Application Thumbnail](assets/thumbnail.gif)
 ## 📌 Introduction
 
 ### 🔍 What is this application?
