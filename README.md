@@ -316,5 +316,6 @@ This ensures components work individually and can be confidently composed into a
 * [OpenCV Documentation](https://docs.opencv.org/)
 * [Python Unittest Library](https://docs.python.org/3/library/unittest.html)
 * [OOP Principles](https://en.wikipedia.org/wiki/Object-oriented_programming)
-
+* [OpenAI](https://chatgpt.com/)
+* [StackOverflow](https://stackoverflow.com/questions)
 ---
