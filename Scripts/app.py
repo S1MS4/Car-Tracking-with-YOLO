@@ -4,9 +4,9 @@ from Scripts.yolo_model import YOLOModelFactory
 from Scripts.yolo_tracker import YOLOTracker
 
 class YOLOTrackingApp:
-    def __init__(self, video_path: str, model_path: str):
+    def __init__(self, video_path: str, model_path: str, confidence_threshold: float = 0.5):
         self.video = VideoHandler(video_path,model_path)
-        model = YOLOModelFactory.create(model_path)
+        model = YOLOModelFactory.create(model_path, confidence_threshold)
         self.tracker = YOLOTracker(model)
 
     def run(self):
