@@ -1,25 +1,24 @@
----
+# YOLO Object Tracking Application
 
-# 🎯 YOLO Object Tracking Application
+## Introduction
 
-## 📌 Introduction
+This project was developed as part of an Object-Oriented Programming course using Python. It implements a YOLO-based object tracking system that processes a video file, detects and tracks multiple objects using the [Ultralytics YOLO](https://github.com/ultralytics/ultralytics) model, and produces an annotated output video with tracked object paths. The system draws persistent motion trails for each detected object by combining YOLO's detection capabilities with custom tracking history management.
 
-### 🔍 What is this application?
+## Preview
 
-This is a **YOLO-based object tracking system** that processes a video file, detects and tracks multiple objects using the [Ultralytics YOLO](https://github.com/ultralytics/ultralytics) model, and outputs an annotated video with tracked object paths. It draws persistent tracks for each object using a combination of YOLO’s object detection and custom tracking history.
-## 👁️‍🗨️ Preview
-
-The program processes each frame of your video, assigns consistent IDs to objects, and draws motion trails. These trails are shortened intentionally to keep the visualization clean and focused on active detections.
+The program processes each frame of a video, assigns consistent IDs to objects, and draws motion trails. The trails are intentionally limited in length to keep the visualization focused on active detections.
 
 ![Demo GIF](show.gif)
 
-Above: Objects are detected, labeled, and tracked with persistent paths as they move through the scene. (Note there are prediction inaccuracies)
-### ▶️ How to run the program
+Objects are detected, labeled, and tracked with persistent paths as they move through the scene. Note that prediction inaccuracies may occur.
 
-Make sure you have the required dependencies installed. They are listed below:
+### How to Run
+
+Ensure that all required dependencies listed below are installed before running the application.
+
 ---
 
-## 📦 Dependencies
+## Dependencies
 
 The application requires the following Python libraries:
 
@@ -29,60 +28,62 @@ The application requires the following Python libraries:
 | `numpy`                    | Numerical operations and array manipulation                        |
 | `argparse`                 | Parses command-line arguments                                      |
 | `collections.defaultdict`  | Efficiently tracks object history                                  |
-| `ultralytics`              | YOLO model for object detection and tracking                      |
-| `unittest`                 | Built-in module for writing and running tests                     |
-| **`video`**               | 🔑 **Required**: The video file to be processed (input required for tracking) |
-| **`Scripts`**             | 🔑 **Required**: Contains the main application logic and entry point |
+| `ultralytics`              | YOLO model for object detection and tracking                       |
+| `unittest`                 | Built-in module for writing and running tests                      |
+| **`video`**                | Required: The video file to be processed                           |
+| **`Scripts`**              | Required: Contains the main application logic and entry point      |
 
-⚠️ Note: The YOLO models (e.g., yolov8m.pt) are downloaded automatically by the ultralytics library if not already present locally. No manual download is required.
-### 🔧 Installation
+Note: YOLO model weights (e.g., `yolov8m.pt`) are downloaded automatically by the `ultralytics` library if not already present locally. No manual download is required.
 
-You can install the required dependencies using pip like this:
+### Installation
+
+Install the required dependencies using pip:
 
 ```bash
 pip install opencv-python numpy ultralytics
 ```
-**(NOTICE) before you run this don't forget to cd into the appropriate directory!**
 
-**for me it's:**
+Before running the program, navigate to the appropriate directory:
+
 ```bash
-cd yolov8_tracking/Car-Tracking-with-yolov8  
+cd yolov8_tracking/Car-Tracking-with-yolov8
 ```
+
 Run the program with:
 
 ```bash
 python -m Scripts.run <path_to_input_video> --model yolov8m.pt
 ```
 
-For example:
+Example:
 
 ```bash
 python -m Scripts.run "path/to/input/video" --model yolov8m.pt
 ```
 
-### 🛠 How to use the program
+### Usage
 
-1. Provide a path to a video file.
-2. The application will process the video and generate an output file with `_model_name` appended to the filename.
-3. You’ll find the output video in the same directory as your input.
-
----
-
-## 🧠 Body / Analysis
-
-### 📌 Object-Oriented Programming Principles
-
-This project demonstrates all **four pillars of OOP**:
+1. Provide a path to a video file as a command-line argument.
+2. The application processes the video and generates an output file with `_tracked` appended to the filename.
+3. The output video is saved to the same directory as the input file.
 
 ---
 
-#### 1. **Encapsulation**
+## Body / Analysis
 
-Encapsulation involves bundling data with the methods that operate on that data, while restricting direct access to some of the object's components. This principle is demonstrated throughout the project:
+### Object-Oriented Programming Principles
+
+This project demonstrates all four pillars of OOP.
+
+---
+
+#### 1. Encapsulation
+
+Encapsulation involves bundling data with the methods that operate on it, while restricting direct access to internal components. This principle appears throughout the project:
 
 - The `VideoHandler` class encapsulates all video I/O logic. Users interact with simple public methods like `read_frame()` and `write_frame()`, without needing to understand how video capture or writing is initialized.
 
-- A key example of encapsulation is the `_init_writer()` method, which is used internally by `VideoHandler` to configure the output video writer. It abstracts the complexity of determining output filename, format, frame size, and encoding:
+- A key example is the `_init_writer()` method, which is used internally by `VideoHandler` to configure the output video writer. It abstracts the complexity of determining the output filename, format, frame size, and encoding:
 
 ```python
 def _init_writer(self, input_path: str):
@@ -94,18 +95,19 @@ def _init_writer(self, input_path: str):
         int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     )
     return cv2.VideoWriter(output_path, fourcc, fps, frame_size)
-````
+```
 
-* This method is prefixed with an underscore to indicate it's intended for internal use only, reinforcing encapsulation by convention.
+- The underscore prefix indicates this method is intended for internal use only, reinforcing encapsulation by convention.
 
-* Similarly, classes like `YOLOModel` and `YOLOTracker` expose only the methods needed by the main application, while hiding lower-level details like inference parameters or track history management.
+- Similarly, classes such as `YOLOModel` and `YOLOTracker` expose only the methods required by the main application, while hiding lower-level details such as inference parameters or track history management.
+
 ---
 
-#### 2. **Abstraction**
+#### 2. Abstraction
 
-Abstraction is achieved by exposing only essential methods and hiding the internal complexities of how tasks are performed.
+Abstraction is achieved by exposing only essential methods and hiding the internal complexity of how tasks are performed.
 
-* A clear example of abstraction in this project is the introduction of the `BaseModel` abstract class using Python's `abc` module. This class defines a contract (`track()`) that all derived model classes must implement, allowing the rest of the application to interact with any model uniformly without needing to understand the specifics of each implementation:
+- The `BaseModel` abstract class, defined using Python's `abc` module, establishes a contract (`track()`) that all derived model classes must implement. This allows the rest of the application to interact with any model uniformly, without needing to understand the specifics of each implementation:
 
 ```python
 from abc import ABC, abstractmethod
@@ -119,10 +121,10 @@ class BaseModel(ABC):
         pass
 ```
 
-* Two concrete implementations derive from `BaseModel`:
+- Two concrete implementations derive from `BaseModel`:
 
-  * `YOLOModel`: A general wrapper for the Ultralytics YOLO model.
-  * `YOLOv8Model`: A version with optional confidence threshold filtering for more control over detection quality.
+  - `YOLOModel`: A general wrapper for the Ultralytics YOLO model.
+  - `YOLOv8Model`: A version with optional confidence threshold filtering for greater control over detection quality.
 
 ```python
 class YOLOModel(BaseModel):
@@ -156,7 +158,7 @@ class YOLOv8Model(BaseModel):
         return results
 ```
 
-* The `YOLOModelFactory` further abstracts model instantiation by selecting the correct model class based on the filename or configuration:
+- The `YOLOModelFactory` further abstracts model instantiation by selecting the correct model class based on the filename or configuration:
 
 ```python
 class YOLOModelFactory:
@@ -168,17 +170,17 @@ class YOLOModelFactory:
             return YOLOModel(model_path)
 ```
 
-* This abstraction ensures that the `YOLOTrackingApp` does not need to change even if new model types are introduced, as long as they conform to the `BaseModel` interface.
+- This design ensures that `YOLOTrackingApp` does not need to change when new model types are introduced, as long as they conform to the `BaseModel` interface.
+
 ---
-#### 3. **Inheritance**
 
-Inheritance allows a class to reuse logic and structure from another class, reducing redundancy and increasing consistency.
+#### 3. Inheritance
 
-This project demonstrates inheritance in multiple areas:
+Inheritance allows a class to reuse logic and structure from a parent class, reducing redundancy and improving consistency.
 
-#### ✅ Custom Model Abstraction
+**Custom Model Abstraction**
 
-* The `BaseModel` class uses inheritance to define a common interface for all YOLO models via the `track()` method. Both `YOLOModel` and `YOLOv8Model` inherit from it:
+- The `BaseModel` class defines a common interface for all YOLO models via the `track()` method. Both `YOLOModel` and `YOLOv8Model` inherit from it:
 
 ```python
 class YOLOModel(BaseModel):
@@ -190,11 +192,11 @@ class YOLOv8Model(BaseModel):
     ...
 ```
 
-* This use of inheritance enforces a standard method structure and allows easy swapping or extension of model behavior.
+This enforces a standard method structure and allows model implementations to be swapped or extended with minimal changes.
 
-#### ✅ Unit Testing
+**Unit Testing**
 
-* The `TestYOLOIntegration` class inherits from Python’s built-in `unittest.TestCase`, gaining access to rich testing tools like `assertEqual()`, `setUp()`, etc.:
+- The `TestYOLOIntegration` class inherits from Python's built-in `unittest.TestCase`, gaining access to testing utilities such as `assertEqual()` and `setUp()`:
 
 ```python
 class TestYOLOIntegration(unittest.TestCase):
@@ -202,11 +204,12 @@ class TestYOLOIntegration(unittest.TestCase):
 ```
 
 ---
-#### 4. **Polymorphism**
 
-Polymorphism is used via the **Factory Design Pattern** and potential extensibility:
+#### 4. Polymorphism
 
-* The `YOLOModelFactory` provides a unified interface for model creation, enabling different model types or configurations to be loaded without changing how they're used:
+Polymorphism is applied via the Factory Design Pattern:
+
+- The `YOLOModelFactory` provides a unified interface for model creation, allowing different model types to be loaded without changing how they are used:
 
 ```python
 class YOLOModelFactory:
@@ -215,15 +218,15 @@ class YOLOModelFactory:
         return YOLOModel(model_path)
 ```
 
-* Regardless of which YOLO model version is loaded (`yolov8m.pt`, `yolov8n.pt`, etc.), the calling code in `YOLOTrackingApp` does not change — it simply calls `model.track(frame)`.
+- Regardless of which YOLO model version is loaded (`yolov8m.pt`, `yolov8n.pt`, etc.), the calling code in `YOLOTrackingApp` does not change. It simply calls `model.track(frame)`.
 
 ---
 
-### 🧩 Composition and Aggregation
+### Composition and Aggregation
 
-The project demonstrates both **composition** and **aggregation** principles:
+The project demonstrates both composition and aggregation:
 
-* **Composition** is used in `YOLOTrackingApp`, where the components `VideoHandler`, `YOLOModel`, and `YOLOTracker` are created and managed internally:
+- **Composition** is used in `YOLOTrackingApp`, where the components `VideoHandler`, `YOLOModel`, and `YOLOTracker` are created and managed internally:
 
 ```python
 class YOLOTrackingApp:
@@ -233,18 +236,18 @@ class YOLOTrackingApp:
         self.tracker = YOLOTracker(model)
 ```
 
-* These components have no meaning outside of the application—they are fully owned and controlled by it.
+These components have no meaningful existence outside of the application. They are fully owned and controlled by it.
 
-* **Aggregation** is used in `YOLOTracker` to maintain tracking history using a `defaultdict(list)`. This allows objects (track histories) to exist independently and be updated over time without tight coupling.
+- **Aggregation** is used in `YOLOTracker` to maintain tracking history using a `defaultdict(list)`. This allows track history objects to exist and be updated over time without tight coupling to the tracker itself.
 
 ---
 
-### 🧾 File I/O Operations
+### File I/O Operations
 
-The project performs both **reading from** and **writing to** files:
+The project performs both reading from and writing to files:
 
-* **Input** is handled using OpenCV’s `VideoCapture` to read frames from a video file.
-* **Output** is written frame-by-frame to a new video file with `_tracked.mp4` suffix, using `VideoWriter`.
+- **Input** is handled using OpenCV's `VideoCapture` to read frames from a video file.
+- **Output** is written frame-by-frame to a new video file with a `_tracked.mp4` suffix, using `VideoWriter`.
 
 ```python
 self.cap = cv2.VideoCapture(input_path)
@@ -252,20 +255,18 @@ self.cap = cv2.VideoCapture(input_path)
 self.out.write(frame)
 ```
 
-This ensures real-time processing of input videos and persistent saving of results.
+This ensures real-time processing of input video and persistent saving of results.
 
 ---
 
-### 🧪 Testing
+### Testing
 
-Testing is implemented with Python's built-in `unittest` framework:
+Testing is implemented with Python's built-in `unittest` framework. Tests in `yolo_unit_test.py` verify:
 
-* Tests in `yolo_unit_test.py` verify:
-
-  * Model creation (`test_model_creation`)
-  * Frame processing logic (`test_process_frame`)
-  * Tracker history updates (`test_update_history`)
-  * Video file I/O (`test_video_handler`)
+- Model creation (`test_model_creation`)
+- Frame processing logic (`test_process_frame`)
+- Tracker history updates (`test_update_history`)
+- Video file I/O (`test_video_handler`)
 
 Example test:
 
@@ -277,45 +278,46 @@ def test_update_history(self):
     self.assertIn(1, self.tracker.history)
 ```
 
-This ensures components work individually and can be confidently composed into a larger system.
-
-## 📊 Results and Summary
-
-### ✅ Results
-
-* 🧠 Successfully tracked objects frame-to-frame with persistent ID tracking.
-* 🎨 Drew motion trails for each object to visualize movement.
-* 💾 Saved annotated videos with object bounding boxes and tracks.
-* 🧪 All unit tests passed successfully.
+This ensures that individual components work correctly and can be confidently composed into a larger system.
 
 ---
 
-## 🧾 Conclusions
+## Results and Summary
 
-* 📌 This project demonstrates a practical implementation of object tracking using modern deep learning models and classical computer vision.
-* 🧱 The structure is modular and testable, with proper abstraction between components.
-* 🔧 Future work can introduce support for real-time video streams and multiple model types.
-* 💡 Potential for extension into surveillance, traffic monitoring, or sports analytics applications.
-* 🚀 YOLO models (especially YOLOv8) offer an impressive balance of speed and accuracy, making them well-suited for real-time applications even on modest hardware configurations.
+### Results
 
-* 📉 Despite strong performance, YOLO occasionally produces false positives or misses small/overlapping objects, suggesting room for improvement via post-processing techniques or hybrid tracking systems.
----
-
-## 🚀 Extensibility Ideas
-
-* Add GUI for video input/output selection.
-* Live webcam tracking.
-* Store tracking logs (CSV/JSON).
-* Add model benchmarking and FPS measurement utilities.
+- Objects were successfully tracked frame-to-frame with persistent ID assignment.
+- Motion trails were drawn for each object to visualize movement over time.
+- Annotated output videos with bounding boxes and tracks were saved correctly.
+- All unit tests passed successfully.
 
 ---
 
-## 📚 Resources & References
+## Conclusions
 
-* [Ultralytics YOLO](https://github.com/ultralytics/ultralytics)
-* [OpenCV Documentation](https://docs.opencv.org/)
-* [Python Unittest Library](https://docs.python.org/3/library/unittest.html)
-* [OOP Principles](https://en.wikipedia.org/wiki/Object-oriented_programming)
-* [OpenAI](https://chatgpt.com/)
-* [StackOverflow](https://stackoverflow.com/questions)
+- This project demonstrates a practical implementation of object tracking using modern deep learning models and classical computer vision techniques.
+- The codebase is modular and testable, with clear abstraction boundaries between components.
+- Future work could introduce support for real-time video streams and additional model types.
+- Potential applications include surveillance, traffic monitoring, and sports analytics.
+- YOLOv8 offers a strong balance of speed and accuracy, making it well-suited for real-time use even on modest hardware.
+- Despite strong overall performance, the model occasionally produces false positives or misses small and overlapping objects, suggesting room for improvement through post-processing techniques or hybrid tracking approaches.
+
 ---
+
+## Extensibility Ideas
+
+- Add a GUI for video input and output selection.
+- Support live webcam tracking.
+- Export tracking logs to CSV or JSON format.
+- Add model benchmarking and FPS measurement utilities.
+
+---
+
+## Resources and References
+
+- [Ultralytics YOLO](https://github.com/ultralytics/ultralytics)
+- [OpenCV Documentation](https://docs.opencv.org/)
+- [Python Unittest Library](https://docs.python.org/3/library/unittest.html)
+- [OOP Principles](https://en.wikipedia.org/wiki/Object-oriented_programming)
+- [OpenAI](https://chatgpt.com/)
+- [StackOverflow](https://stackoverflow.com/questions)
